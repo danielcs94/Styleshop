@@ -1,0 +1,125 @@
+<h2 class="mb-4">{{ esAdmin ? 'Pedidos' : 'Mis pedidos' }}</h2>
+
+@if (mensaje) { <div class="alert alert-success mb-3">{{ mensaje }}</div> }
+
+@if (cargando) {
+<div class="text-center my-5">
+  <div class="spinner-border" role="status"></div>
+</div>
+} @else if (pedidos.length === 0) {
+<div class="alert alert-info">
+  No hay pedidos todavía. <a routerLink="/catalogo">Ir al catálogo</a>
+</div>
+} @else {
+@for (pedido of pedidos; track pedido.pedido_id) {
+<div class="card mb-3">
+  <div class="card-body d-flex justify-content-between align-items-center">
+    <div>
+      <h6 class="mb-1">Pedido #{{ pedido.pedido_id }}
+        @if (esAdmin) {
+        <span class="text-muted" style="font-size:12px;">
+          — {{ pedido.nombre }} {{ pedido.apellidos }}
+        </span>
+        }
+      </h6>
+      <p class="mb-1 text-muted small">{{ pedido.creado_en | date:'dd/MM/yyyy' }}</p>
+      <span class="badge bg-{{ getBadgeColor(pedido.estado) }}">{{ pedido.estado }}</span>
+    </div>
+    <div class="text-end d-flex flex-column gap-2 align-items-end">
+      <p class="fw-bold mb-0">{{ pedido.total }}€</p>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-dark btn-sm" (click)="verDetalle(pedido.pedido_id)">
+          Ver detalle
+        </button>
+        @if (esAdmin) {
+        <button class="btn btn-outline-dark btn-sm" (click)="abrirModificar(pedido)">
+          Modificar
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+}
+
+@if (pedidoModificar) {
+<div class="modal d-block bg-dark bg-opacity-50">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modificar pedido #{{ pedidoModificar.pedido_id }}</h5>
+        <button class="btn-close" (click)="pedidoModificar = null"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">Selecciona el nuevo estado del pedido:</p>
+        <div class="d-flex flex-column gap-2">
+          <button class="btn btn-outline-dark"
+            (click)="cambiarEstado(pedidoModificar.pedido_id, 'pendiente')">Pendiente</button>
+          <button class="btn btn-outline-dark"
+            (click)="cambiarEstado(pedidoModificar.pedido_id, 'pagado')">Pagado</button>
+          <button class="btn btn-outline-dark"
+            (click)="cambiarEstado(pedidoModificar.pedido_id, 'enviado')">Enviado</button>
+          <button class="btn btn-outline-dark"
+            (click)="cambiarEstado(pedidoModificar.pedido_id, 'entregado')">Entregado</button>
+          <button class="btn btn-outline-danger"
+            (click)="cambiarEstado(pedidoModificar.pedido_id, 'cancelado')">Cancelado</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-dark" (click)="pedidoModificar = null">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+@if (pedidoSeleccionado) {
+<div class="modal d-block bg-dark bg-opacity-50">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pedido #{{ pedidoSeleccionado.pedido_id }}</h5>
+        <button class="btn-close" (click)="cerrarDetalle()"></button>
+      </div>
+      <div class="modal-body">
+        @if (esAdmin) {
+        <p><strong>Cliente:</strong> {{ pedidoSeleccionado.nombre }} {{ pedidoSeleccionado.apellidos }}</p>
+        <p><strong>Email:</strong> {{ pedidoSeleccionado.email }}</p>
+        }
+        @if (pedidoSeleccionado.nombre_cliente) {
+        <p><strong>Nombre:</strong> {{ pedidoSeleccionado.nombre_cliente }} {{ pedidoSeleccionado.apellidos_cliente }}
+        </p>
+        <p><strong>Email:</strong> {{ pedidoSeleccionado.email_cliente }}</p>
+        @if (pedidoSeleccionado.telefono_cliente) {
+        <p><strong>Teléfono:</strong> {{ pedidoSeleccionado.telefono_cliente }}</p>
+        }
+        @if (pedidoSeleccionado.ultimos_digitos) {
+        <p><strong>Tarjeta:</strong> **** **** **** {{ pedidoSeleccionado.ultimos_digitos }}</p>
+        }
+        }
+        <p><strong>Estado:</strong>
+          <span class="badge bg-{{ getBadgeColor(pedidoSeleccionado.estado) }}">
+            {{ pedidoSeleccionado.estado }}
+          </span>
+        </p>
+        <hr>
+        @for (linea of pedidoSeleccionado.lineas; track linea.linea_id) {
+        <div class="d-flex justify-content-between">
+          <span>{{ linea.nombre }} × {{ linea.cantidad }}</span>
+          <span>{{ linea.subtotal }}€</span>
+        </div>
+        }
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">
+          <span>Total</span>
+          <span>{{ pedidoSeleccionado.total }}€</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-dark" (click)="cerrarDetalle()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,28 @@
+<nav>
+  <div class="nav-container">
+    <a routerLink="/catalogo" class="nav-logo">N7SHOP</a>
+
+    <div class="nav-links">
+      <a routerLink="/catalogo" class="nav-link-item">Catálogo</a>
+      @if (usuario) {
+      <a routerLink="/pedidos" class="nav-link-item">
+        {{ esAdmin() ? 'Pedidos' : 'Mis pedidos' }}
+      </a>
+      }
+      @if (esAdmin()) {
+      <a routerLink="/admin/productos" class="nav-link-item">Admin</a>
+      }
+    </div>
+
+    <div class="nav-actions">
+      @if (!usuario) {
+      <a routerLink="/login" class="nav-link-item">Entrar</a>
+      <a routerLink="/registro" class="nav-link-item">Registro</a>
+      }
+      @if (usuario) {
+      <span class="nav-user">{{ usuario.nombre }}</span>
+      <button class="btn-salir" (click)="logout()">Salir</button>
+      }
+    </div>
+  </div>
+</nav>

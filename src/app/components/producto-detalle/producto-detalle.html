@@ -1,0 +1,62 @@
+@if (cargando) {
+  <div class="text-center my-5">
+    <div class="spinner-border" role="status"></div>
+  </div>
+} @else if (!producto) {
+  <div class="alert alert-danger mt-4">Producto no encontrado.</div>
+} @else {
+  <div class="producto-container">
+    <div class="producto-imagenes">
+      @if (imagenes.length > 0) {
+        <div class="mosaico">
+          @for (img of imagenes; track img.imagen_id) {
+            <div class="mosaico-item">
+              <img [src]="'http://localhost:8888/styleshop/images/' + img.url"
+                   [alt]="producto.nombre">
+            </div>
+          }
+        </div>
+      } @else if (producto.imagen) {
+        <div class="imagen-principal">
+          <img [src]="'http://localhost:8888/styleshop/images/' + producto.imagen"
+               [alt]="producto.nombre">
+        </div>
+      } @else {
+        <div class="imagen-placeholder">
+          <span>👕</span>
+        </div>
+      }
+    </div>
+
+    <div class="producto-info">
+      <span class="badge">{{ producto.categoria }}</span>
+      <h2>{{ producto.nombre }}</h2>
+      <p class="descripcion">{{ producto.descripcion }}</p>
+      <p class="precio">{{ producto.precio }}€</p>
+      <p class="stock">Stock disponible: {{ producto.stock }} unidades</p>
+
+      @if (mensaje) {
+        <div class="alert alert-success mb-3">{{ mensaje }}</div>
+      }
+      @if (error) {
+        <div class="alert alert-danger mb-3">{{ error }}</div>
+      }
+
+      <div class="cantidad-row">
+        <label>Cantidad</label>
+        <input type="number" class="form-control"
+          [(ngModel)]="cantidad" min="1" [max]="producto.stock">
+      </div>
+
+      <div class="botones">
+        <button class="btn btn-dark" (click)="anadirAlCarrito()"
+          [disabled]="producto.stock === 0">
+          {{ producto.stock === 0 ? 'Sin stock' : 'Añadir al carrito' }}
+        </button>
+        <a routerLink="/catalogo" class="btn btn-outline-dark">
+          Volver al catálogo
+        </a>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,95 @@
+@if (cargando) {
+  <div class="text-center my-5">
+    <div class="spinner-border" role="status"></div>
+  </div>
+} @else {
+  <div class="checkout-container">
+
+    <!-- Columna izquierda: formulario -->
+    <div class="checkout-form">
+      <a routerLink="/catalogo" class="checkout-logo">N7SHOP</a>
+
+      <div class="checkout-section">
+        <h3>Contacto</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" class="checkout-input" [(ngModel)]="nombre" placeholder="Nombre">
+          </div>
+          <div class="form-group">
+            <input type="text" class="checkout-input" [(ngModel)]="apellidos" placeholder="Apellidos">
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="email" class="checkout-input" [(ngModel)]="email" placeholder="Correo electrónico">
+        </div>
+        <div class="form-group">
+          <input type="tel" class="checkout-input" [(ngModel)]="telefono" placeholder="Teléfono (opcional)">
+        </div>
+      </div>
+
+      <div class="checkout-section">
+        <h3>Pago</h3>
+        <div class="form-group">
+          <input type="text" class="checkout-input" [(ngModel)]="numeroTarjeta"
+            (input)="formatearTarjeta($event)"
+            placeholder="Número de tarjeta" maxlength="19">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" class="checkout-input" [(ngModel)]="caducidad"
+              (input)="formatearCaducidad($event)"
+              placeholder="MM/AA" maxlength="5">
+          </div>
+          <div class="form-group">
+            <input type="text" class="checkout-input" [(ngModel)]="cvv"
+              placeholder="CVV" maxlength="3">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-confirmar" (click)="confirmar()" [disabled]="procesando">
+        {{ procesando ? 'PROCESANDO...' : 'CONFIRMAR PEDIDO' }}
+      </button>
+    </div>
+
+    <!-- Columna derecha: resumen -->
+    <div class="checkout-resumen">
+      <div class="resumen-header">
+        <h3>Resumen del pedido</h3>
+      </div>
+
+      @for (item of carrito.items; track item.producto_id) {
+        <div class="resumen-item">
+          <div class="resumen-item-info">
+            @if (item.imagen) {
+              <img [src]="'http://localhost:8888/styleshop/images/' + item.imagen" [alt]="item.nombre">
+            } @else {
+              <div class="resumen-item-placeholder">👕</div>
+            }
+            <div>
+              <p class="resumen-item-nombre">{{ item.nombre }}</p>
+              <p class="resumen-item-cantidad">× {{ item.cantidad }}</p>
+            </div>
+          </div>
+          <span class="resumen-item-precio">{{ item.subtotal }}€</span>
+        </div>
+      }
+
+      <div class="resumen-total">
+        <div class="resumen-linea">
+          <span>Subtotal</span>
+          <span>{{ carrito.total }}€</span>
+        </div>
+        <div class="resumen-linea">
+          <span>Envío</span>
+          <span class="text-muted">Gratis</span>
+        </div>
+        <div class="resumen-linea resumen-total-final">
+          <span>Total</span>
+          <span>{{ carrito.total }}€</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+}

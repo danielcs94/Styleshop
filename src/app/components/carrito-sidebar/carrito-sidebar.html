@@ -1,0 +1,42 @@
+@if (visible) {
+<div class="overlay" (click)="cerrar()"></div>
+}
+
+<div class="sidebar" [class.open]="visible">
+  <div class="sidebar-header">
+    <span class="sidebar-titulo">Tu carrito</span>
+    <button class="btn-cerrar" (click)="cerrar()">✕</button>
+  </div>
+
+  @if (carrito.items.length === 0) {
+  <div class="sidebar-vacio">
+    <p>Tu carrito está vacío</p>
+    <a routerLink="/catalogo" (click)="cerrar()">Ver catálogo</a>
+  </div>
+  } @else {
+  <div class="sidebar-items">
+    @for (item of carrito.items; track item.producto_id) {
+    <div class="sidebar-item">
+      <div class="item-info">
+        <span class="item-nombre">{{ item.nombre }}</span>
+        <span class="item-cantidad">× {{ item.cantidad }}</span>
+      </div>
+      <div class="item-derecha">
+        <span class="item-precio">{{ item.subtotal }}€</span>
+        <button class="btn-eliminar" (click)="eliminarProducto(item.producto_id)">✕</button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-total">
+      <span>Total</span>
+      <span>{{ carrito.total }}€</span>
+    </div>
+    <button class="btn-finalizar" (click)="irACheckout()">
+      FINALIZAR COMPRA
+    </button>
+  </div>
+  }
+</div>

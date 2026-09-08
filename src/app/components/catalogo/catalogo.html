@@ -1,0 +1,53 @@
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Catálogo</h2>
+  </div>
+  <div class="col-md-6">
+    <div class="input-group">
+      <input type="text" class="form-control" [(ngModel)]="busqueda"
+        placeholder="Buscar productos..." (keyup.enter)="buscar()">
+      <button class="btn btn-dark" (click)="buscar()">Buscar</button>
+    </div>
+  </div>
+</div>
+
+<div class="mb-4">
+  <button class="btn btn-outline-dark me-2 mb-2" (click)="cargarProductos()">Todos</button>
+  @for (cat of categorias; track cat.categoria_id) {
+    <button class="btn btn-outline-dark me-2 mb-2" (click)="filtrarPorCategoria(cat.categoria_id)">
+      {{ cat.nombre }}
+    </button>
+  }
+</div>
+
+@if (cargando) {
+  <div class="text-center my-5">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Cargando productos...</p>
+  </div>
+} @else if (productos.length === 0) {
+  <div class="alert alert-info">No se encontraron productos.</div>
+} @else {
+  <div class="row">
+    @for (p of productos; track p.producto_id) {
+      <div class="col-md-3 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <span class="badge bg-secondary mb-2">{{ p.categoria }}</span>
+            <img [src]="'http://localhost:8888/styleshop/images/' + p.imagen" 
+     class="card-img-top" 
+     alt="{{ p.nombre }}"
+     style="height: 300px; object-fit: cover;">
+            <h5 class="card-title" style="margin-top: 8px;">{{ p.nombre }}</h5>
+            <p class="card-text text-muted small">{{ p.descripcion }}</p>
+            <p class="fw-bold fs-5">{{ p.precio }}€</p>
+            <p class="text-muted small">Stock: {{ p.stock }} unidades</p>
+          </div>
+          <div class="card-footer">
+            <a [routerLink]="['/producto', p.producto_id]" class="btn btn-dark w-100">Ver producto</a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

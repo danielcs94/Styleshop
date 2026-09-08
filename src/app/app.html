@@ -1,0 +1,5 @@
+<app-navbar></app-navbar>
+<app-carrito-sidebar #carritoSidebar></app-carrito-sidebar>
+<div class="container mt-4">
+  <router-outlet (activate)="onActivate($event, carritoSidebar)"></router-outlet>
+</div>

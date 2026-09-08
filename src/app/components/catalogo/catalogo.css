@@ -1,0 +1,17 @@
+.card-img-top {
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.card-text {
+  margin-bottom: 4px;
+}
+
+.fw-bold.fs-5 {
+  font-size: 18px !important;
+  margin-bottom: 4px;
+}
